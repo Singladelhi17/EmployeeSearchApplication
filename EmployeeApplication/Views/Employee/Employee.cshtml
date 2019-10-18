@@ -1,0 +1,94 @@
+﻿@model IEnumerable<EmployeeApplication.Models.Employee>
+@using System.Web.Optimization
+@using EmployeeApplication.Models
+@{
+    ViewBag.Title = "Employee List";
+}
+
+<h2>Employee</h2>
+@{
+    SearchEmployee empfilter = new SearchEmployee();
+    if (ViewData["Employeefilter"] != null)
+    {
+        empfilter = ViewData["Employeefilter"] as SearchEmployee;
+    }
+}
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+@using (Html.BeginForm("SearchEmployee", "Employee", FormMethod.Get))
+{
+    <table cellpadding="8">
+        <tr>
+            <th>
+                <input type="text" class="form-control" name="Name" placeholder="Employee Name" value="@empfilter.Name" />
+
+            </th>
+            <th>&nbsp;</th>
+            <th>
+                <input type="datetime" class="form-control" name="StartDate" placeholder="Start Date" value="@empfilter.StartDate" />
+            </th>
+            <th><input type="datetime" class="form-control" name="EndDate" placeholder="End Date" value="@empfilter.EndDate" /></th>
+
+            <th><input type="submit" value="Search" class="btn btn-primary" /></th>
+        </tr>
+    </table>
+}
+<br />
+<table class="table">
+    <tr>
+        <th>
+            Full Name
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.JobTitle)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DOJ)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DepartmentName)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+            {
+        <tr>
+            <td>
+                @string.Format("{0} {1}", item.FName, item.LName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.JobTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DOJ, "{0:dd/MM/yyyy}")
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DepartmentName)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Update", new { employeeId = item.EmployeeID })
+            </td>
+        </tr>
+    }
+
+</table>
+@section Scripts {
+    @Scripts.Render("~/scripts/combined")
+    @Styles.Render("~/Css/combined")
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('input[type=datetime]').datepicker({
+                dateFormat: "dd/M/yy",
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-60:+0"
+            });
+
+        });
+    </script>
+}
